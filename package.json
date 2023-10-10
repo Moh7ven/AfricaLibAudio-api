@@ -1,0 +1,14 @@
+{
+  "name": "africalibaudio-api",
+  "version": "1.0.0",
+  "description": "Api pour AfricaLibAudio",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mohamed Sangare",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
