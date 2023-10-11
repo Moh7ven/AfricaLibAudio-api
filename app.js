@@ -1,6 +1,9 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 
 const connectDB = require("./config/db");
+const livreRoutes = require("./routes/livre");
+const userRoutes = require("./routes/user");
 
 connectDB();
 const app = express();
@@ -18,23 +21,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/depart", (req, res, next) => {
-  const data = [
-    {
-      id: 1,
-      nom: "l'afrique en général",
-      prix: 10000,
-      nbrComment: 10,
-    },
-    {
-      id: 2,
-      nom: "Soukoulou",
-      prix: 15000,
-      nbrComment: 10,
-    },
-  ];
-  res.status(200).json(data);
-  console.log("Reponse reçue");
-});
+// app.use(bodyParser.json());
+app.use(express.json());
+
+app.use("/api/livre", livreRoutes);
+app.use("/api/auth", userRoutes);
 
 module.exports = app;
