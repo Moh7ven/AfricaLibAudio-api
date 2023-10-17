@@ -1,5 +1,5 @@
 const express = require("express");
-const bodyParser = require("body-parser");
+const path = require("path");
 
 const connectDB = require("./config/db");
 const livreRoutes = require("./routes/livre");
@@ -23,8 +23,11 @@ app.use((req, res, next) => {
 
 // app.use(bodyParser.json());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/livre", livreRoutes);
 app.use("/api/auth", userRoutes);
+app.use("/assets", express.static(path.join(__dirname, "assets")));
+// app.use("/audio", express.static(path.join(__dirname, "audio")));
 
 module.exports = app;
