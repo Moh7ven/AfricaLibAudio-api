@@ -1,18 +1,18 @@
 const fs = require("fs");
 
-const auth = require("../middleware/auth");
+// const auth = require("../middleware/auth");
 const Livre = require("../models/Livre");
 const { log } = require("console");
 
 //FONCTION POUR CREER UN LIVRE
 exports.createLivre = (req, res, next) => {
-  console.log(req.files.image[0].filename);
+  // console.log(req.auth);
   const livreObject = req.body;
   delete livreObject._id;
-  delete livreObject._userId;
+  delete livreObject._adminId;
   const livre = new Livre({
     ...livreObject,
-    userId: req.auth.userId,
+    userId: req.auth.adminId,
     image: `${req.protocol}://${req.get("host")}/assets/${
       req.files.image[0].filename
     }`,
@@ -63,7 +63,7 @@ exports.updateLivre = (req, res, next) => {
   delete livreObject._userId;
   Livre.findOne({ _id: req.params.id })
     .then((livre) => {
-      if (livre.userId != req.auth.userId) {
+      if (livre.userId != req.auth.adminId) {
         res.status(401).json({ message: "Not authorized" });
       } else {
         Livre.updateOne(
@@ -81,14 +81,16 @@ exports.updateLivre = (req, res, next) => {
 
 //FONCTION POUR SUPPRIMER UN LIVRE
 exports.deleteLivre = (req, res, next) => {
+  // console.log(req.params.id);
   Livre.findOne({ _id: req.params.id })
     .then((livre) => {
-      if (livre.userId != req.auth.userId) {
+      if (livre.userId != req.auth.adminId) {
         res.status(401).json({ message: "Not authorized" });
       } else {
-        const filename = livre.image.split("/images/")[1];
-        fs.unlink(`images/${filename}`, `audio/${filename}`, () => {
-          Thing.deleteOne({ _id: req.params.id })
+        const filenameImage = livre.image.split("/assets/")[1];
+        const filenameAudio = livre.audio.split("/assets/")[1];
+        fs.unlink(/*`assets/${filenameImage}`,  `assets/${filenameAudio}`, */ () => {
+          Livre.deleteOne({ _id: req.params.id })
             .then(() => {
               res.status(200).json({ message: "Objet supprimé !" });
             })

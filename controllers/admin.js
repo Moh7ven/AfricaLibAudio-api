@@ -1,25 +1,22 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const User = require("../models/User");
+const Admin = require("../models/Admin");
 
-//FONCTION POUR S'INCRIRE
-exports.signup = (req, res, next) => {
+//FONCTION POUR ENREGISTRER UN ADMIN
+exports.signUpAdmin = (req, res, next) => {
   bcrypt
-    .hash(req.body.passwordUser, 10)
+    .hash(req.body.passAdmin, 10)
     .then((hash) => {
-      const user = new User({
-        nomUser: req.body.nomUser,
-        prenomUser: req.body.prenomUser,
+      const admin = new Admin({
         Username: req.body.Username,
-        emailUser: req.body.emailUser,
-        passwordUser: hash,
+        passAdmin: hash,
       });
-      user
+      admin
         .save()
         .then(() =>
           res.status(400).json({
-            message: `Utilisateur ${req.body.nomUser} à été bien enregistré`,
+            message: `Utilisateur ${req.body.Username} à été bien enregistré`,
           })
         )
         .catch((error) => res.status(400).json(error));
@@ -28,22 +25,22 @@ exports.signup = (req, res, next) => {
 };
 
 //FONCTION POUR SE CONNNECTER
-exports.login = (req, res, next) => {
-  console.log(req.body.emailUser);
-  User.findOne({ emailUser: req.body.emailUser })
-    .then((user) => {
-      if (!user) {
+exports.loginAdmin = (req, res, next) => {
+  console.log(req.body.Username);
+  Admin.findOne({ Username: req.body.Username })
+    .then((admin) => {
+      if (!admin) {
         return res.status(401).json({ error: "Utilisateur non trouvé !" });
       }
       bcrypt
-        .compare(req.body.passwordUser, user.passwordUser)
+        .compare(req.body.passAdmin, admin.passAdmin)
         .then((valid) => {
           if (!valid) {
             return res.status(401).json({ error: "Mot de passe incorrect !" });
           }
           res.status(200).json({
-            userId: user._id,
-            token: jwt.sign({ userId: user._id }, "RANDOM_TOKEN_SECRET", {
+            adminId: admin._id,
+            token: jwt.sign({ adminId: admin._id }, "RANDOM_TOKEN_SECRET", {
               expiresIn: "24h",
             }),
           });

@@ -5,6 +5,8 @@ const dotenv = require("dotenv").config();
 const connectDB = require("./config/db");
 const livreRoutes = require("./routes/livre");
 const userRoutes = require("./routes/user");
+const achatRoutes = require("./routes/achat");
+const adminRoutes = require("./routes/admin");
 
 connectDB();
 const app = express();
@@ -26,8 +28,10 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/livre", livreRoutes);
 app.use("/api/auth", userRoutes);
+app.use("/api/livre", livreRoutes);
+app.use("/api/achat", achatRoutes);
+app.use("/api/admin", adminRoutes);
 app.use("/assets", express.static(path.join(__dirname, "assets")));
 // app.use("/audio", express.static(path.join(__dirname, "audio")));
 
