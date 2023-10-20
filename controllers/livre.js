@@ -6,7 +6,7 @@ const { log } = require("console");
 
 //FONCTION POUR CREER UN LIVRE
 exports.createLivre = (req, res, next) => {
-  // console.log(req.auth);
+  // console.log(req.auth.adminId);
   const livreObject = req.body;
   delete livreObject._id;
   delete livreObject._adminId;
@@ -89,12 +89,29 @@ exports.deleteLivre = (req, res, next) => {
       } else {
         const filenameImage = livre.image.split("/assets/")[1];
         const filenameAudio = livre.audio.split("/assets/")[1];
-        fs.unlink(/*`assets/${filenameImage}`,  `assets/${filenameAudio}`, */ () => {
-          Livre.deleteOne({ _id: req.params.id })
-            .then(() => {
-              res.status(200).json({ message: "Objet supprimé !" });
-            })
-            .catch((error) => res.status(401).json({ error }));
+
+        fs.unlink(`./assets/${filenameImage}`, (errImage) => {
+          if (errImage) {
+            console.log(errImage);
+            return res
+              .status(500)
+              .json({ error: "Erreur lors de la suppression de l'image" });
+          }
+
+          fs.unlink(`./assets/${filenameAudio}`, (errAudio) => {
+            if (errAudio) {
+              console.log(errAudio);
+              return res
+                .status(500)
+                .json({ error: "Erreur lors de la suppression de l'audio" });
+            }
+
+            Livre.deleteOne({ _id: req.params.id })
+              .then(() => {
+                res.status(200).json({ message: "Objet supprimé !" });
+              })
+              .catch((error) => res.status(401).json({ error }));
+          });
         });
       }
     })

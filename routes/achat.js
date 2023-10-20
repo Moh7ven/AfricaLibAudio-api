@@ -16,7 +16,7 @@ router.get("/", authAdmin, achatCtrl.getAllAchat);
 //ROUTE POUR RECUPÉRER TOUTES LES ACHATS POUR L'USER CONNECTER
 router.get("/userachat", auth, multer, achatCtrl.getUserAchat);
 
-//ROUTE POUR RECUPÉRER UN ACHAT UN ACHAT
+//ROUTE POUR RECUPÉRER UN ACHAT 
 router.get("/:id", auth, achatCtrl.getOneAchat);
 
 //ROUTE POUR SUPPRIMER UN ACHAT

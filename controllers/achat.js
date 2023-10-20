@@ -9,10 +9,15 @@ exports.createAchat = (req, res, next) => {
   const achatObject = req.body;
   delete achatObject._id;
   delete achatObject._userId;
+  let today = new Date();
 
   const achat = new Achat({
     ...achatObject,
     userId: req.auth.userId,
+    dateAchat: `${today.getDate()}/${
+      today.getMonth() + 1
+    }/${today.getFullYear()}`,
+    heureAchat: `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`,
   });
 
   achat
@@ -35,9 +40,11 @@ exports.getAllAchat = (req, res, next) => {
 //FONCTION POUR RECUPÉRER TOUS LES ACHATS DE L'USER CONNECTER
 exports.getUserAchat = (req, res, next) => {
   Achat.find({ userId: req.auth.userId })
-    .then((achat) => {
-      Livre.find({ _id: achat.IdArticle })
-        .then((livre) => res.status(200).json(livre))
+    .then((achats) => {
+      const idsDesLivres = achats.map((achat) => achat.idArticle);
+
+      Livre.find({ _id: { $in: idsDesLivres } })
+        .then((livres) => res.status(200).json(livres))
         .catch((error) => res.status(400).json({ error }));
     })
     .catch((error) => res.status(400).json({ error }));

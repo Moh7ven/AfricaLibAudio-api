@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
+const Achat = require("../models/Achat");
 
 //FONCTION POUR S'INCRIRE
 exports.signup = (req, res, next) => {
@@ -51,4 +52,18 @@ exports.login = (req, res, next) => {
         .catch((error) => res.status(500).json({ error }));
     })
     .catch((error) => res.status(500).json({ error }));
+};
+
+//FONCTION POUR RECUPÉRER TOUS LES UTILISTEURS
+exports.getAllUser = (req, res, next) => {
+  User.find()
+    .then((users) => res.status(200).json(users))
+    .catch((error) => res.status(400).json({ error }));
+};
+
+//FONCTION POUR RECUPÉRER L'UTILISATEUR CONNECTÉ
+exports.getUserConnected = (req, res, next) => {
+  User.findOne({ _id: req.auth.userId })
+    .then((userConnected) => res.status(200).json(userConnected))
+    .catch((error) => res.status(400).json({ error }));
 };
