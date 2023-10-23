@@ -31,7 +31,7 @@ exports.signup = (req, res, next) => {
 //FONCTION POUR SE CONNNECTER
 exports.login = (req, res, next) => {
   console.log(req.body.emailUser);
-  User.findOne({ emailUser: req.body.emailUser })
+  User.findOne({ Username: req.body.Username })
     .then((user) => {
       if (!user) {
         return res.status(401).json({ error: "Utilisateur non trouvé !" });
