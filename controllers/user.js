@@ -7,14 +7,14 @@ const Achat = require("../models/Achat");
 //FONCTION POUR S'INCRIRE
 exports.signup = (req, res, next) => {
   bcrypt
-    .hash(req.body.passwordUser, 10)
+    .hash(req.body.password, 10)
     .then((hash) => {
       const user = new User({
         nomUser: req.body.nomUser,
         prenomUser: req.body.prenomUser,
         Username: req.body.Username,
         emailUser: req.body.emailUser,
-        passwordUser: hash,
+        password: hash,
       });
       user
         .save()
@@ -37,7 +37,7 @@ exports.login = (req, res, next) => {
         return res.status(401).json({ error: "Utilisateur non trouvé !" });
       }
       bcrypt
-        .compare(req.body.passwordUser, user.passwordUser)
+        .compare(req.body.password, user.password)
         .then((valid) => {
           if (!valid) {
             return res.status(401).json({ error: "Mot de passe incorrect !" });

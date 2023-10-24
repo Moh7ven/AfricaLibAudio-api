@@ -6,11 +6,11 @@ const Admin = require("../models/Admin");
 //FONCTION POUR ENREGISTRER UN ADMIN
 exports.signUpAdmin = (req, res, next) => {
   bcrypt
-    .hash(req.body.passAdmin, 10)
+    .hash(req.body.password, 10)
     .then((hash) => {
       const admin = new Admin({
         Username: req.body.Username,
-        passAdmin: hash,
+        password: hash,
       });
       admin
         .save()
@@ -33,7 +33,7 @@ exports.loginAdmin = (req, res, next) => {
         return res.status(401).json({ error: "Utilisateur non trouvé !" });
       }
       bcrypt
-        .compare(req.body.passAdmin, admin.passAdmin)
+        .compare(req.body.password, admin.password)
         .then((valid) => {
           if (!valid) {
             return res.status(401).json({ error: "Mot de passe incorrect !" });
