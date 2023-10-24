@@ -19,7 +19,7 @@ exports.signup = (req, res, next) => {
       user
         .save()
         .then(() =>
-          res.status(400).json({
+          res.status(200).json({
             message: `Utilisateur ${req.body.nomUser} à été bien enregistré`,
           })
         )
