@@ -67,3 +67,13 @@ exports.getUserConnected = (req, res, next) => {
     .then((userConnected) => res.status(200).json(userConnected))
     .catch((error) => res.status(400).json({ error }));
 };
+
+//FONCTION POUR SUPPRIMER UN UTILISATEUR
+
+exports.deleteUser = (req, res, next) => {
+  User.deleteOne({ _id: req.params.id })
+    .then(() => {
+      res.status(200).json({ message: "Utilisateur supprimé !" });
+    })
+    .catch((error) => res.status(401).json({ error }));
+};
