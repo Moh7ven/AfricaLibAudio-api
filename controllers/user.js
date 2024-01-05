@@ -58,8 +58,15 @@ exports.login = (req, res, next) => {
 exports.getAllUser = (req, res, next) => {
   User.find()
     .then((users) => {
-      const { nomUser, prenomUser, Username, emailUser } = users;
-      res.status(200).json({ nomUser, prenomUser, Username, emailUser });
+      const formattedUsers = users.map((user) => {
+        return {
+          nomUser: user.nomUser,
+          prenomUser: user.prenomUser,
+          Username: user.Username,
+          emailUser: user.emailUser,
+        };
+      });
+      res.status(200).json(formattedUsers);
     })
     .catch((error) => res.status(400).json({ error }));
 };
