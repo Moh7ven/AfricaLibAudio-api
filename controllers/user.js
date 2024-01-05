@@ -60,6 +60,7 @@ exports.getAllUser = (req, res, next) => {
     .then((users) => {
       const formattedUsers = users.map((user) => {
         return {
+          _id: user._id,
           nomUser: user.nomUser,
           prenomUser: user.prenomUser,
           Username: user.Username,
