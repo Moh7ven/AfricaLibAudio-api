@@ -57,7 +57,10 @@ exports.login = (req, res, next) => {
 //FONCTION POUR RECUPÉRER TOUS LES UTILISTEURS
 exports.getAllUser = (req, res, next) => {
   User.find()
-    .then((users) => res.status(200).json(users))
+    .then((users) => {
+      const { nomUser, prenomUser, Username, emailUser } = users;
+      res.status(200).json({ nomUser, prenomUser, Username, emailUser });
+    })
     .catch((error) => res.status(400).json({ error }));
 };
 
